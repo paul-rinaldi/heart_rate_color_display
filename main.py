@@ -5,6 +5,9 @@ import time
 import math
 
 
+def close_window(root):
+    root.destroy()
+
 # generate a new rgb value to give to the given UI element
 def change_color(root):
     r = str(hex(random.randint(0, 255)))[2:]
@@ -44,6 +47,10 @@ window.configure(bg="red")
 window.overrideredirect(True)
 window.geometry("{0}x{1}+0+0".format(window.winfo_screenwidth(), window.winfo_screenheight()))
 change_color(window)
+# press q to quit
+window.bind("<q>", lambda event, root=window: close_window(root))
+window.focus_set()
+
 window.mainloop()
 
 
