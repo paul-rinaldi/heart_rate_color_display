@@ -1,9 +1,18 @@
 import os, sys
-# from tkinter import *       # py3
-from Tkinter import *  # py2
+import config
+from tkinter import *  # py3
+#from Tkinter import *  # py2
 import random
 import time
 import math
+from firebase import Firebase
+print("past imports")
+# must:
+# edit async.py to asyncn.py?
+#  pip install:
+#   firebase
+#   python_jwt
+#   gcloud
 
 
 def close_window(root):
@@ -47,19 +56,19 @@ def convert_val_to_color(hr):
     #  of tier above and tier below percentage...
     print(type(hr))
     if hr >= 160:
-        rtn = color_variant("#FF0000", hr / 160)  # "red range"
+        rtn = color_variant("#FF0000", int(hr / 160))  # "red range"
     elif hr >= 140:
-        rtn = color_variant("#FF7F00", hr / 140)  # "orange range" # nope
+        rtn = color_variant("#FF7F00", int(hr / 140))  # "orange range" # nope
     elif hr >= 115:
-        rtn = color_variant("#FFFF00", hr / 115)  # "yellow range" # nope
+        rtn = color_variant("#FFFF00", int(hr / 115))  # "yellow range" # nope
     elif hr >= 85:
-        rtn = color_variant("#00FF00", hr / 85)  # "green range" # nope
+        rtn = color_variant("#00FF00", int(hr / 85))  # "green range" # nope
     elif hr >= 65:
-        rtn = color_variant("#0000FF", hr / 65)  # "blue range"
+        rtn = color_variant("#0000FF", int(hr / 65))  # "blue range"
     elif hr >= 55:
-        rtn = color_variant("#4B0082", hr / 55)  # "indigo range"
+        rtn = color_variant("#4B0082", int(hr / 55))  # "indigo range"
     elif hr >= 40:
-        rtn = color_variant("#9400D3", hr / 40)  # "violet range"
+        rtn = color_variant("#9400D3", int(hr / 40)) # "violet range"
     else:
         rtn = "#9400D3"
     print(rtn)
@@ -113,6 +122,16 @@ def get_hr_value():
 
 # initialize random
 random.seed(time.localtime())
+
+config_f = {
+  "apiKey": config.api_key,
+  "authDomain": config.authDomain,
+  "databaseURL": config.databaseURL,
+  "storageBucket": config.storageBucket
+}
+
+# initialize firebase
+firebase = Firebase(config_f)
 
 # tkinter UI setup and start
 window = Tk()
