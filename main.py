@@ -29,7 +29,7 @@ base_30_yrold_target_exer_hr = 95
 max_30_yrold_target_exer_hr = 162
 
 
-def change_color(root):
+def change_color(root, database):
     # old used random
     # r = str(hex(random.randint(0, 255)))[2:]
     # g = str(hex(random.randint(0, 255)))[2:]
@@ -43,15 +43,14 @@ def change_color(root):
     #
     # hex_number = '#' + r + g + b
     # old used random
-    hex_color = get_hr_value()
+    hex_color = get_hr_value(database)
 
     root.configure(bg=hex_color)
 
     # call this function again in one second
-    root.after(200, change_color, root)
+    root.after(200, change_color, root, db)
 
 
-# todo need to remove Y O and G
 def convert_val_to_color(hr):
     # ranges of rainbow, uses color_variant to lighten colors away from base color for that
     #  range -- P.S. however a better approach would be to average and lighten toward the gradient
@@ -59,12 +58,12 @@ def convert_val_to_color(hr):
     print(type(hr))
     if hr >= 160:
         rtn = color_variant("#FF0000", int(hr / 160))  # "red range"
-    elif hr >= 140:
-        rtn = color_variant("#FF7F00", int(hr / 140))  # "orange range" # nope
-    elif hr >= 115:
-        rtn = color_variant("#FFFF00", int(hr / 115))  # "yellow range" # nope
-    elif hr >= 85:
-        rtn = color_variant("#00FF00", int(hr / 85))  # "green range" # nope
+    #elif hr >= 140:
+    #    rtn = color_variant("#FF7F00", int(hr / 140))  # "orange range" # nope
+    #elif hr >= 115:
+    #    rtn = color_variant("#FFFF00", int(hr / 115))  # "yellow range" # nope
+    #elif hr >= 85:
+    #    rtn = color_variant("#00FF00", int(hr / 85))  # "green range" # nope
     elif hr >= 65:
         rtn = color_variant("#0000FF", int(hr / 65))  # "blue range"
     elif hr >= 55:
@@ -104,14 +103,14 @@ def color_variant(hex_color, brightness_offset=1):
     return rtn
 
 
-def get_hr_value():
+def get_hr_value(database):
     """
     pulls hr values from somewhere
     :return: hex color
     """
 
-    # todo get value from the web
     # firebase call
+
     json = "{hr:45}"
     # parse the json into an number
     hr = int(json[json.find(":") + 1:-1])
@@ -134,6 +133,7 @@ config_f = {
 
 # initialize firebase
 firebase = Firebase(config_f)
+db = firebase.database()
 
 # tkinter UI setup and start
 window = Tk()
@@ -141,7 +141,7 @@ window.title("")
 window.configure(bg="blue")
 window.overrideredirect(True)
 window.geometry("{0}x{1}+0+0".format(window.winfo_screenwidth(), window.winfo_screenheight()))
-change_color(window)
+change_color(window, db)
 # press q to quit
 window.bind("<q>", lambda event, root=window: close_window(root))
 window.focus_set()
