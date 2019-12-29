@@ -1,10 +1,8 @@
-import os, sys
 import config
 from tkinter import *  # py3
 #from Tkinter import *  # py2
 import random
 import time
-import math
 from firebase import Firebase
 print("past imports")
 # must:
@@ -15,6 +13,8 @@ print("past imports")
 #   sseclient
 #   pycryptodome
 #   requests_toolbelt
+
+DEFAULT_HR = 70
 
 
 def close_window(root):
@@ -30,19 +30,6 @@ max_30_yrold_target_exer_hr = 162
 
 
 def change_color(root, database):
-    # old used random
-    # r = str(hex(random.randint(0, 255)))[2:]
-    # g = str(hex(random.randint(0, 255)))[2:]
-    # b = str(hex(random.randint(0, 255)))[2:]
-    # if len(r) == 1:
-    #    r = '0'+r
-    # if len(g) == 1:
-    #    g = '0'+g
-    # if len(b) == 1:
-    #    b = '0'+b
-    #
-    # hex_number = '#' + r + g + b
-    # old used random
     hex_color = get_hr_value(database)
 
     root.configure(bg=hex_color)
@@ -82,20 +69,15 @@ def color_variant(hex_color, brightness_offset=1):
     takes a color like #87c95f and produces a lighter or darker variant \
     https://chase-seibert.github.io/blog/2011/07/29/python-calculate-lighterdarker-rgb-colors.html
     """
-    #print(hex_color)
     if len(hex_color) != 7:
         raise Exception("Passed %s into color_variant(), needs to be in #87c95f format." % hex_color)
     rgb_hex = [hex_color[x:x + 2] for x in [1, 3, 5]]
-    #print(rgb_hex)
     new_rgb_int = [int(hex_value, 16) + brightness_offset for hex_value in rgb_hex]
     new_rgb_int = [min([255, max([0, i])]) for i in new_rgb_int]  # make sure new values are between 0 and 255
-    #print(new_rgb_int)
     # hex() produces "0x88", we want just "88"
     rtn = "#"
     for i in new_rgb_int:
         _byte = hex(i)[2:]
-        #print(type(_byte))
-        #print(_byte)
         if len(_byte) == 1:
             _byte = '0' + _byte  # need 01, not just 1 for #_______
         rtn += _byte
@@ -108,17 +90,11 @@ def get_hr_value(database):
     pulls hr values from somewhere
     :return: hex color
     """
-
-    # firebase call
-
-    json = "{hr:45}"
-    # parse the json into an number
-    hr = int(json[json.find(":") + 1:-1])
-    # map the HR number to a HR zone
-
-    hex = convert_val_to_color(hr)
-    #print(hex)
-    return hex
+    hr_req_val = database.child("hr").get().val()
+    if hr_req_val:
+        return convert_val_to_color(hr_req_val)
+    else:
+        return convert_val_to_color(DEFAULT_HR)
 
 
 # initialize random
