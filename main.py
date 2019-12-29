@@ -8,11 +8,13 @@ import math
 from firebase import Firebase
 print("past imports")
 # must:
-# edit async.py to asyncn.py?
 #  pip install:
 #   firebase
 #   python_jwt
 #   gcloud
+#   sseclient
+#   pycryptodome
+#   requests_toolbelt
 
 
 def close_window(root):
@@ -81,20 +83,20 @@ def color_variant(hex_color, brightness_offset=1):
     takes a color like #87c95f and produces a lighter or darker variant \
     https://chase-seibert.github.io/blog/2011/07/29/python-calculate-lighterdarker-rgb-colors.html
     """
-    print(hex_color)
+    #print(hex_color)
     if len(hex_color) != 7:
         raise Exception("Passed %s into color_variant(), needs to be in #87c95f format." % hex_color)
     rgb_hex = [hex_color[x:x + 2] for x in [1, 3, 5]]
-    print(rgb_hex)
+    #print(rgb_hex)
     new_rgb_int = [int(hex_value, 16) + brightness_offset for hex_value in rgb_hex]
     new_rgb_int = [min([255, max([0, i])]) for i in new_rgb_int]  # make sure new values are between 0 and 255
-    print(new_rgb_int)
+    #print(new_rgb_int)
     # hex() produces "0x88", we want just "88"
     rtn = "#"
     for i in new_rgb_int:
         _byte = hex(i)[2:]
-        print(type(_byte))
-        print(_byte)
+        #print(type(_byte))
+        #print(_byte)
         if len(_byte) == 1:
             _byte = '0' + _byte  # need 01, not just 1 for #_______
         rtn += _byte
@@ -116,7 +118,7 @@ def get_hr_value():
     # map the HR number to a HR zone
 
     hex = convert_val_to_color(hr)
-    print(hex)
+    #print(hex)
     return hex
 
 
@@ -145,4 +147,3 @@ window.bind("<q>", lambda event, root=window: close_window(root))
 window.focus_set()
 
 window.mainloop()
-
